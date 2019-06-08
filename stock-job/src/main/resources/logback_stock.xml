@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+	<!-- 文件输出格式 -->
+	<property name="PATTERN" value="%-12(%d{yyyy-MM-dd HH:mm:ss.SSS}) |-%-5level [%thread] %c [%L] -| %msg%n" />
+	<!-- pro文件路径 -->
+	<property name="PRO_FILE_PATH" value="D:/logs/stockLogs.txt" />
+    <property name="PRO_FILE_ERR_PATH" value="D:/logs/stockErrLogs.txt" />
+
+	<!-- 开发环境 -->
+	<springProfile name="dev">
+		<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+			<encoder>
+				<pattern>${PATTERN}</pattern>
+			</encoder>
+		</appender>
+
+		<root level="info">
+			<appender-ref ref="CONSOLE" />
+		</root>
+	</springProfile>
+
+
+	<!-- 生产环境 -->
+	<springProfile name="prd">
+		<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+			<encoder>
+				<pattern>${PATTERN}</pattern>
+			</encoder>
+		</appender>
+
+		<appender name="PROD_FILE_INFO" class="ch.qos.logback.core.rolling.RollingFileAppender" level="info">
+			<file>${PRO_FILE_PATH}</file>
+			<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+				<fileNamePattern>${PRO_FILE_PATH}/warn.%d{yyyy-MM-dd}.log</fileNamePattern>
+				<MaxHistory>100</MaxHistory>
+			</rollingPolicy>
+			<layout class="ch.qos.logback.classic.PatternLayout">
+				<pattern>${PATTERN}</pattern>
+			</layout>
+		</appender>
+
+        <appender name="PROD_FILE_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender" level="error">
+            <file>${PRO_FILE_ERR_PATH}</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${PRO_FILE_ERR_PATH}/warn.%d{yyyy-MM-dd}.log</fileNamePattern>
+                <MaxHistory>100</MaxHistory>
+            </rollingPolicy>
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>${PATTERN}</pattern>
+            </layout>
+        </appender>
+
+        <logger name="stock" level="error">
+            <appender-ref ref="PROD_FILE_ERROR"/>
+        </logger>
+
+        <root level="info">
+			<appender-ref ref="CONSOLE" />
+			<appender-ref ref="PROD_FILE_INFO" />
+		</root>
+	</springProfile>
+</configuration>

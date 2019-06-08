@@ -1,0 +1,31 @@
+spring:
+  profiles:
+    active: dev
+
+
+---
+
+spring:
+  profiles: dev
+  redis:
+    database: 0
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/dev_chinaStock
+logging:
+  config: classpath:logback_stock.xml
+
+
+
+---
+
+
+spring:
+  profiles: prd
+  redis:
+    database: 1
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/chinaStock
+logging:
+  config: classpath:logback_stock.xml
