@@ -26,6 +26,6 @@ spring:
     database: 1
   data:
     mongodb:
-      uri: mongodb://localhost:27017/chinaStock
+      uri: mongodb://localhost:27017/stock
 logging:
   config: classpath:logback_stock.xml

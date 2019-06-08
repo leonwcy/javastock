@@ -1,30 +1,23 @@
 package stock.biz.sina;
 
 import org.htmlparser.Tag;
-import org.htmlparser.tags.Div;
-import org.htmlparser.tags.ParagraphTag;
-import org.htmlparser.util.NodeIterator;
+import org.htmlparser.util.ParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import stock.biz.convertor.StockMinObjCon;
 import stock.biz.http.HttpRequest;
 import stock.biz.http.HttpResponseEntity;
-import stock.biz.redis.RedisKey;
 import stock.biz.redis.StringRedisBiz;
-import stock.biz.utils.DateUtil;
-import stock.biz.utils.StringUtil;
+import stock.dal.mongo.StockCompanyRepository;
 import stock.dal.mongo.StockMinRepository;
-import stock.dal.mongo.pojo.StockMinObj;
+import stock.dal.mongo.pojo.StockCompanyObj;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.Parser;
-import org.htmlparser.tags.LinkTag;
 import org.htmlparser.util.NodeList;
 @Service
 public class GrabComDataBiz {
@@ -36,6 +29,8 @@ public class GrabComDataBiz {
 
     @Autowired
     private StockMinRepository stockMinRepository;
+    @Autowired
+    private StockCompanyRepository stockCompanyRepository;
     @Autowired
     StringRedisBiz stringRedisBiz;
 
@@ -54,26 +49,37 @@ public class GrabComDataBiz {
 
         if(httpResponseEntity.getResponseCode() == 200)
         {
-            Parser parser = Parser.createParser(httpResponseEntity.getResponseContent(),"UTF-8");
-            NodeList nodeList = parser
-                    .extractAllNodesThatMatch(new NodeFilter() {
-                        //实现该方法,用以过滤标签
-                        public boolean accept(Node node) {
-                            if (node instanceof Tag ){
-
-                                if(target_ids.contains (((Tag) node).getAttribute("id")) && ((Tag) node).getChildren()!=null)   {
-                                    String value = ((Tag) node).getChildren().toHtml();
-                                    String key = stockCode + "_" + ((Tag) node).getAttribute("id");
-                                    return true;
-                                }
-                            }
-                            return false;
-                        }
-                    });
+            parseSaveData(stockCode, httpResponseEntity);
         }
     }
 
+    private void parseSaveData(String stockCode, HttpResponseEntity httpResponseEntity) throws ParserException {
+        Parser parser = Parser.createParser(httpResponseEntity.getResponseContent(),"UTF-8");
+        NodeList nodeList = parser
+                .extractAllNodesThatMatch(new NodeFilter() {
+                    //实现该方法,用以过滤标签
+                    public boolean accept(Node node) {
+                        if (node instanceof Tag){
 
+                            if(target_ids.contains (((Tag) node).getAttribute("id")) && ((Tag) node).getChildren()!=null)   {
+                                String value = ((Tag) node).getChildren().toHtml();
+                                String key = stockCode+"_" + ((Tag) node).getAttribute("id");
+                                StockCompanyObj obj = new StockCompanyObj();
+                                obj.setId(key);
+                                obj.setKey(((Tag) node).getAttribute("id"));
+                                obj.setValue(value);
+                                obj.setStockCode(stockCode);
+                                if(obj!=null) {
+                                    stockCompanyRepository.save(obj);
+                                }
+
+                                return true;
+                            }
+                        }
+                        return false;
+                    }
+                });
+    }
 
 
 }

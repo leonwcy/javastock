@@ -18,21 +18,17 @@ package stock.dal.mongo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
+import stock.dal.mongo.pojo.StockCompanyObj;
 import stock.dal.mongo.pojo.StockMinObj;
 
-import java.util.List;
-
 @Component
-public class StockMinRepository {
+public class StockCompanyRepository {
     @Autowired
     private MongoTemplate mongoTemplate;
 
-    public void save(StockMinObj stockMinObj) {
-        mongoTemplate.save(stockMinObj);
+    public void save(StockCompanyObj stockCompanyObj) {
+        mongoTemplate.save(stockCompanyObj);
     }
 
 }
