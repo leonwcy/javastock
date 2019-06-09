@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.core.env.Environment;
+import stock.job.grabdata.FetchStockCompanyDataJob;
 import stock.job.grabdata.FetchStockShortDataJob;
 import stock1.job.anontation.EnableScan;
 
@@ -26,7 +27,7 @@ public class JobApplication {
 
     @Bean
     public JobDetail sampleJobDetail() {
-        return JobBuilder.newJob(FetchStockShortDataJob.class).withIdentity("FetchStockShortDataJob")
+        return JobBuilder.newJob(FetchStockCompanyDataJob.class).withIdentity("FetchStockCompanyDataJob")
                 .usingJobData("name", "World").storeDurably().build();
     }
 

@@ -10,8 +10,8 @@ public class test {
     public static void main(String[] args)
     {
         String driverName = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-        String dbURL = "jdbc:sqlserver://localhost\\MSSQLSERVER1:20587;database=ChinaStock";
-        String userName = "leon-wcy@hotmail.com";
+        String dbURL = "jdbc:sqlserver://leon03\\MSSQLSERVER1:20587;database=ChinaStock";
+        String userName = "leon";
         String userPwd = "jiajiajia";
 
         try

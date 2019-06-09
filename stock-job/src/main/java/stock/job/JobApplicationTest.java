@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportResource;
+import stock.job.grabdata.FetchStockCompanyDataJob;
 import stock.job.grabdata.FetchStockShortDataJob;
 
 @SpringBootApplication
@@ -19,7 +20,7 @@ public class JobApplicationTest {
 
     @Bean
     public JobDetail sampleJobDetail() {
-        return JobBuilder.newJob(FetchStockShortDataJob.class).withIdentity("FetchStockShortDataJobTest")
+        return JobBuilder.newJob(FetchStockCompanyDataJob.class).withIdentity("FetchStockCompanyDataJob")
                 .usingJobData("name", "World").storeDurably().build();
     }
 

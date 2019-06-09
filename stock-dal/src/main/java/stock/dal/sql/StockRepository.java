@@ -9,13 +9,17 @@ import java.sql.Statement;
 
 @Component
 public class StockRepository {
-    String connectionUrl = "jdbc:sqlserver://localhost\\MSSQLSERVER1:20587;database=ChinaStock";
+    String connectionUrl = "jdbc:sqlserver://leon03\\MSSQLSERVER1:20587;database=ChinaStock";
     String userName = "leon-wcy@hotmail.com";
     String userPwd = "jiajiajia";
 
     Connection con = null;
     Statement stmt = null;
     ResultSet rs = null;
+
+    public String getStockHKCodes(){
+        return StockCode.stockCodes;
+    }
 
     public String getStockCodes() {
         try {
