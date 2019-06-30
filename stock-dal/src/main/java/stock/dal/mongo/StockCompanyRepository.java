@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
 import stock.dal.mongo.pojo.StockCompanyObj;
+import stock.dal.mongo.pojo.StockCompanyUnitObj;
 import stock.dal.mongo.pojo.StockMinObj;
 
 @Component
@@ -29,6 +30,10 @@ public class StockCompanyRepository {
 
     public void save(StockCompanyObj stockCompanyObj) {
         mongoTemplate.save(stockCompanyObj);
+    }
+
+    public void saveUnitObj(StockCompanyUnitObj unitObj) {
+        mongoTemplate.save(unitObj);
     }
 
 }
