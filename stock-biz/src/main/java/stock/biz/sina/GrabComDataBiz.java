@@ -17,6 +17,7 @@ import stock.biz.utils.DateUtil;
 import stock.biz.utils.StringUtil;
 import stock.dal.mongo.StockCompanyRepository;
 import stock.dal.mongo.StockMinRepository;
+import stock.dal.mongo.StockTickDataRepository;
 import stock.dal.mongo.pojo.StockCompanyObj;
 
 import java.lang.reflect.Field;
@@ -30,6 +31,7 @@ import org.htmlparser.Parser;
 import org.htmlparser.util.NodeList;
 import stock.dal.mongo.pojo.StockCompanyRawObj;
 import stock.dal.mongo.pojo.StockCompanyUnitObj;
+import stock.dal.mongo.pojo.TicketDataObj;
 
 @Service
 public class GrabComDataBiz {
@@ -43,6 +45,8 @@ public class GrabComDataBiz {
     private StockMinRepository stockMinRepository;
     @Autowired
     private StockCompanyRepository stockCompanyRepository;
+    @Autowired
+    private StockTickDataRepository stockTickDataRepository;
     @Autowired
     StringRedisBiz stringRedisBiz;
 
@@ -73,7 +77,6 @@ public class GrabComDataBiz {
                     //实现该方法,用以过滤标签
                     public boolean accept(Node node) {
                         if (node instanceof Tag){
-
                             if(target_ids.contains (((Tag) node).getAttribute("id")) && ((Tag) node).getChildren()!=null)   {
                                 String value = ((Tag) node).getChildren().toHtml();
                                 String key = stockCode+"_" + ((Tag) node).getAttribute("id");
@@ -121,11 +124,15 @@ public class GrabComDataBiz {
         }
         objMap.values().forEach(d->{
                 d.setId(d.toString());
+                Optional<TicketDataObj> price = stockTickDataRepository.get_day_hk(d.stockCode,d.datetime);
+                d.setPrice(price.isPresent()? price.get().getClose(): BigDecimal.ZERO);
                 logger.info("save obj" + JSON.toJSONString(d));
                 stockCompanyRepository.saveUnitObj(d);
         });
 
     }
+
+
 
     /***
      * TODO: 这里要考虑 为0 的数值怎么处理，是不是不要了

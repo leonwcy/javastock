@@ -12,9 +12,12 @@ import stock.biz.http.HttpResponseEntity;
 import stock.biz.redis.StringRedisBiz;
 import stock.biz.sina.GrabDataBiz;
 import stock.dal.mongo.StockMinRepository;
+import stock.dal.mongo.StockTickDataRepository;
 import stock.dal.mongo.pojo.StockMinObj;
+import stock.dal.mongo.pojo.TicketDataObj;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(locations = {
@@ -25,6 +28,17 @@ public class MongoTest {
     @Autowired
     private StockMinRepository stockMinRepository;
 
+    @Autowired
+    private StockTickDataRepository stockTickDataRepository;
+
+    @Test
+    public void testGetStockTickData(){
+        TicketDataObj obj = new TicketDataObj();
+        obj.setCode("hk02991");
+        obj.setDate("2019-01-11");
+        List<TicketDataObj> data = stockTickDataRepository.get(obj);
+        Assert.notEmpty(data);
+    }
 
     @Test
     public void testMongo() throws Exception {

@@ -91,6 +91,16 @@ public class StockCompanyUnitObj implements Serializable {
     public String PBE;
     public String PBO;
 
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public BigDecimal price;
+
     public String getPE() {
         return PE;
     }
